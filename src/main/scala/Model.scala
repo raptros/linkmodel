@@ -2,19 +2,10 @@ package local.nodens.linkmodel
 import scala.xml._
 import scala.collection.immutable.Map
 
-
-trait Comp {
-  def renderXML:Elem
-  //override def toString = renderXML.toString
-}
-
-final class LinkSymAssoc(val title:String) {
-  @inline def #@#(url:String):Link = Link(title, url)
-}
-
 /**
  * Link represents a url with a title, in XML. It can be used as a case class.
- * fields: title, url
+ * @param title Title of the link.
+ * @param url Url of the link.
  */
 class Link(val title:String, val url:String) extends Comp{
   def renderXML:Elem = <link title={title} url={url} />
