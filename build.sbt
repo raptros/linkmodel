@@ -1,4 +1,4 @@
-organization := "nodens.local"
+organization := "local.nodens"
 
 name := "linkmodel"
 
