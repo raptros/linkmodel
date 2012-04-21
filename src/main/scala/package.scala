@@ -16,6 +16,8 @@ package object linkmodel {
   }
 
   implicit def document2Manipulator(doc:Document) = new BaseManipulator(doc)
+  implicit def document2BaseManipulate(doc:Document) = new BaseManipulate(Some(document2Manipulator(doc)))
   implicit def optDocument2Manipulate(oDoc:Option[Document]) = Manipulate(oDoc map (document2Manipulator(_)))
+  implicit def manipulator2BaseManipulate(manor:Manipulator) = Manipulate(Some(manor))
   implicit def optManipulator2Manipulate(oManor:Option[Manipulator]) = Manipulate(oManor)
 }

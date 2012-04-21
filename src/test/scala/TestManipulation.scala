@@ -14,18 +14,26 @@ class ManipulationSpec extends Specification {
   "exampleBig" ^
   "should be constructed from scratch" ! constructExBig ^
   "should be constructed from scratch again" ! constructExBig2 ^
+  "should be constructed from scratch w/ in place syntax" ! constructExBig3 ^
+  p^
+  "with removals" ^
+  "ex1 should become ex2" ! convertEx1ToEx2 ^
+  "exampleBig should become ex1" ! convertEx1ToEx2 ^
+  p^
+  "with reordering" ^
+  "ex3 should become ex4" ! convertEx3ToEx4 ^
+  "ex5 should become ex6" ! convertEx5ToEx6 ^
   end
 
-  def ex1GetsTheRightThing = (ex1 / "first").current must_== ex1.sections.getOrElse("first", "fail")
-  val ex1 = Document(Section("first", "title0" #@# "url0"))
+  def ex1GetsTheRightThing = (ex1 / "one").current must_== ex1.sections.getOrElse("one", "fail")
 
   def ex2Changes = {
-    val ex2mod = (ex2 / "first" +#@ "title0" #@# "url0")
+    val ex2mod = (ex2 / "one" +#@ "title0" #@# "url0")
     ex2mod must beSome.which(_ must beAnInstanceOf[Document])
   }
 
   def ex2BecomesEx1 = {
-    val ex2mod:Document = (ex2 / "first" +#@ "title0" #@# "url0").get
+    val ex2mod:Document = (ex2 / "one" +#@ "title0" #@# "url0").get
     println(ex1 == ex2mod)
     println(ex1)
     println(ex2mod)
@@ -59,12 +67,51 @@ class ManipulationSpec extends Specification {
       "two" +#@#@@(0, "p4" #@# "http://example.com/4")
     finalDoc must beSome.which(_ must be_==(exampleBig))
   }
-    
+
+  def constructExBig3 = {
+    val finalDoc = ((Document() +/> "one" +/> "again" +#@>("A Link" #@# "http://example.com/") +#@("Another Link" #@# "http://www.example.com/"))
+    +/> "two" +#@@>(Seq("p1" #@# "http://example.com/1", "p2" #@# "http://example.com/2")) 
+    +#@#@@>(0, "p3" #@# "http://example.com/3")
+    +#@#@@(0, "p4" #@# "http://example.com/4"))
+    finalDoc must beSome.which(_ must be_==(exampleBig))
+  }
+
+  def convertEx1ToEx2 = {
+    val finalDoc = ex1 / "one" -#@ 0
+    finalDoc must beSome.which(_ must be_==(ex2))
+  }
+  def convertExBigToEx1 = {
+    val finalDoc = (exampleBig -/ "two") / "one" -/> "again" +#@ ("title0" #@# "url0")
+    finalDoc must beSome.which(_ must be_==(ex1))
+  }
+
+  def convertEx3ToEx4 = {
+    val finalDoc = (ex3 / "one") ~#@#@@(0, 1, 0)
+    finalDoc must beSome.which(_ must be_==(ex4))
+  }
+
+  def convertEx5ToEx6 = {
+    val finalDoc = (ex5 / "one") ~#@(1, 0)
+    finalDoc must beSome.which(_ must be_==(ex6))
+  }
 
 
 
-  val ex2 = Document(Section("first"))
+  val ex1 = Document(Section("one", "title0" #@# "url0"))
+  val ex2 = Document(Section("one"))
 
+  val ex3 = Document(
+    Section("one",
+      LinkSeq(
+        Seq("title0" #@# "url0",
+          "title1" #@# "url1"))))
+
+  val ex4 = Document(Section("one", LinkSeq(Seq("title1" #@# "url1", "title0" #@# "url0"))))
+
+  val ex5 = Document(Section("one", "title1" #@# "url1", "title0" #@# "url0"))
+  val ex6 = Document(Section("one", "title0" #@# "url0", "title1" #@# "url1"))
+
+      
 
   val exampleBig = Document(
     Section("one",
