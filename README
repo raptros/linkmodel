@@ -1,0 +1,5 @@
+Madness, basically. 
+
+It represents a link model, in Model.scala, in a way that lets it easily read in and write out XML. This is basically readable and straightforward.
+
+It has a crazy manipulation DSL, including Option monad trickery and all manner of implict conversions, mostly represented in Manipulation.scala. Take a look at the sample in the test code, even though that probably won't help. If you need an example of a hairy DSL, you've found it.
