@@ -100,8 +100,9 @@ abstract class Manipulator(val current:ContainsSections, val parents:List[Manipu
   /**
    * Add a section.
    * @param name The name of a section to add.
+   * @note Warning: does not check that this name conflicts - it will just overwrite a previous section.
    * @return The resulting Document.
-   * @note Use a new name unless you want to overwrite a section!
+   * @todo Consider changing the overwrite behavior.
    */
   def +/(name:String):Option[Document] = renewChild(Some(Section(name)))
 
@@ -158,6 +159,26 @@ abstract class Manipulator(val current:ContainsSections, val parents:List[Manipu
    * @return Resulting Document.
    */
   def ~#@#@@(iOld:Int, iNew:Int, ls:Int):Option[Document]
+
+  /**
+   * Renames a section contained by this Manipulator.
+   * @param name Old name of the section.
+   * @param newName Name to give to the section.
+   * @note Warning: will not check that the new name overwrite a previous section.
+   * @return Resulting document.
+   * @todo Consider changing the overwrite behavior.
+   */
+  def ~/(name:String, newName:String):Option[Document]
+
+  /**
+   * Renames a section contained by this Manipulator, given a pair.
+   * Allows ~/ name -> newName syntax.
+   * @param rename the old and new names of the section, as Tuple.
+   * @note Warning: will not check that the new name overwrite a previous section.
+   * @return Resulting document.
+   * @todo Consider changing the overwrite behavior.
+   */
+  def ~/(rename:(String,String)):Option[Document] = ~/(rename._1, rename._2)
   
   /**
    * Obtain the path with root first.

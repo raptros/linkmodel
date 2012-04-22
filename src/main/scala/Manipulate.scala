@@ -34,6 +34,8 @@ class BaseManipulate(manip:Option[Manipulator]) {
   def ~#@>(iOld:Int, iNew:Int):Option[Manipulator] = applyInPlace(_ ~#@(iOld, iNew))
   def ~#@@>(iOld:Int, iNew:Int):Option[Manipulator] = applyInPlace(_ ~#@@(iOld, iNew))
   def ~#@#@@>(iOld:Int, iNew:Int, ls:Int):Option[Manipulator] = applyInPlace(_ ~#@#@@(iOld, iNew, ls))
+  def ~/>(name:String, newName:String):Option[Manipulator] = applyInPlace(_ ~/(name, newName))
+  def ~/>(rename:(String,String)):Option[Manipulator] = applyInPlace(_ ~/ rename)
 }
 
 /**
@@ -73,5 +75,7 @@ case class Manipulate(manip:Option[Manipulator]) extends BaseManipulate(manip) {
   def ~#@(iOld:Int, iNew:Int):Option[Document] = manip.flatMap(_ ~#@(iOld, iNew))
   def ~#@@(iOld:Int, iNew:Int):Option[Document] = manip.flatMap(_ ~#@@(iOld, iNew))
   def ~#@#@@(iOld:Int, iNew:Int, ls:Int):Option[Document] = manip.flatMap(_ ~#@#@@(iOld, iNew, ls))
+  def ~/(name:String, newName:String):Option[Document] = manip.flatMap(_ ~/(name, newName))
+  def ~/(rename:(String,String)):Option[Document] = manip.flatMap(_ ~/ rename)
 }
 

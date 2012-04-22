@@ -95,7 +95,17 @@ class ManipulationSpec extends Specification {
     finalDoc must beSome.which(_ must be_==(ex6))
   }
 
+  def convertEx7ToEx8Take1 = {
+    val fix3 = (ex7 / "bad1" / "bad2") ~/("bad3", "good3") 
+    val fix2 = (fix3 / "bad1") ~/ ("bad2" -> "good2")
+    val fix1 = fix2 ~/ ("bad1" -> "good1")
+    fix1 must beSome.which(_ must be_==(ex8))
+  }
 
+  def convertEx7ToEx8Take2 = {
+    val finalDoc = ex7.~/ ("bad1", "good1")./ ("good1").~/> ("bad2" -> "good2")./("good2") ~/ ("bad3" -> "good3")
+    finalDoc must beSome.which(_ must be_==(ex8))
+  }
 
   val ex1 = Document(Section("one", "title0" #@# "url0"))
   val ex2 = Document(Section("one"))
@@ -110,6 +120,9 @@ class ManipulationSpec extends Specification {
 
   val ex5 = Document(Section("one", "title1" #@# "url1", "title0" #@# "url0"))
   val ex6 = Document(Section("one", "title0" #@# "url0", "title1" #@# "url1"))
+
+  val ex7 = Document(Section("bad1", Section("bad2", Section("bad3", Section("alone")))))
+  val ex8 = Document(Section("good1", Section("good2", Section("good3", Section("alone")))))
 
       
 

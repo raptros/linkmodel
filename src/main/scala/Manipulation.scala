@@ -62,6 +62,16 @@ class SectionManipulator(val sec:Section, parents:List[Manipulator]) extends Man
       linkSeq => new LinkSeq(moveInSeq(iOld, iNew, linkSeq.links))
     })
 
+  def ~/(name:String, newName:String):Option[Document] = {
+    val newCurrent = sec.sections.get(name) map {
+      target => {
+        val newTarget = new Section(newName, target.links, target.linkSeqs, target.sections)
+        newSection(sections = (sec.sections - name) + (newName -> newTarget))
+      }
+    }
+    parents.head.renewChild(newCurrent)
+  }
+
   def prependPath(below:List[String]) = parents.head.prependPath(sec.name::below)
 }
 
@@ -99,6 +109,15 @@ class BaseManipulator(doc:Document) extends NonStoringManipulator(doc, List[Mani
   def getDoc = doc
   def prependPath(below:List[String]) = "Document"::below
   def -/(name:String):Option[Document] = Some(new Document(doc.sections - name))
+
+  def ~/(name:String, newName:String):Option[Document] = {
+    doc.sections.get(name) map {
+      target => {
+        val newTarget = new Section(newName, target.links, target.linkSeqs, target.sections)
+        new Document((doc.sections - name) + (newName -> newTarget))
+      }
+    }
+  }
 }
 
 /**
@@ -119,4 +138,5 @@ class NoneManipulator(secName:String, parents:List[Manipulator])
   def -/(name:String):Option[Document] = None
   def renewChild(newChild:Option[Section]):Option[Document] = None
   def prependPath(below:List[String]) = parents.head.prependPath(("!" +secName)::below)
+  def ~/(name:String, newName:String):Option[Document] = None
 }

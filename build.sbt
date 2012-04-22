@@ -2,7 +2,7 @@ organization := "local.nodens"
 
 name := "linkmodel"
 
-version := "0.1-SNAPSHOT"
+version := "1.0"
 
 unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
 
