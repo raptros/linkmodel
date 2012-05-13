@@ -26,7 +26,7 @@ abstract class Manipulator(val current:ContainsSections, val parents:List[Manipu
   /**
    * Get the base Document.
    */
-  def getDoc:ContainsSections
+  def getDoc:Document
 
   /**
    * Renders XML from the document.
